@@ -1,12 +1,25 @@
-import express from 'express';
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const NODE_ENV = 'production';
+const NODE_ENV = "production";
 const PORT = 3000;
 
 const app = express();
 
-app.get('/', (req, res) => {
-    res.send('Hello from Express!');
+// Recreate __dirname for ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Static files (public)
+app.use(express.static(path.join(__dirname, "public")));
+
+// EJS config
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "src/views"));
+
+app.get("/", (req, res) => {
+    res.render("index", { title: "Home Page" });
 });
 
 app.listen(PORT, () => {
