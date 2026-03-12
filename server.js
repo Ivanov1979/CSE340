@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import db, { testConnection } from "./src/models/db.js";
 
 const app = express();
 
@@ -35,12 +36,28 @@ app.get("/categories", async (req, res) => {
     res.render("categories", { title });
 });
 
+app.get("/test-db", async (req, res) => {
+    try {
+        const result = await db.query("SELECT NOW() as current_time");
+        res.send(`Database works! Current time: ${result.rows[0].current_time}`);
+    } catch (error) {
+        console.error("Database route error:", error.message);
+        res.status(500).send("Database connection failed.");
+    }
+});
+
 app.use(async (req, res) => {
     const title = "Page Not Found";
     res.status(404).render("404", { title });
 });
 
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log(`Server running at http://localhost:${port}`);
     console.log(`Environment: ${nodeEnv}`);
+
+    try {
+        await testConnection();
+    } catch (error) {
+        console.error("Startup database test failed:", error.message);
+    }
 });
