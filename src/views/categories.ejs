@@ -1,19 +1,11 @@
-<%- include('partials/header') %>
-
-    <main class="container">
-        <h1>
-            <%= title %>
-        </h1>
-
-        <section class="card">
-            <h2>Project Categories</h2>
-            <ul class="list">
-                <li>Environmental</li>
-                <li>Educational</li>
-                <li>Community Service</li>
-                <li>Health and Wellness</li>
-            </ul>
-        </section>
-    </main>
-
-    <%- include('partials/footer') %>
+<% if (categories && categories.length> 0) { %>
+    <% categories.forEach(cat=> { %>
+        <div>
+            <h3>
+                <%= cat.name %>
+            </h3>
+        </div>
+        <% }) %>
+            <% } else { %>
+                <p>No categories found.</p>
+                <% } %>

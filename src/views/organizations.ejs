@@ -13,6 +13,25 @@
             impact in their communities.
         </p>
 
+        <!-- 👇 ADD THIS BLOCK -->
+        <% if (organizations && organizations.length> 0) { %>
+            <% organizations.forEach(org=> { %>
+                <div>
+                    <h3>
+                        <%= org.name %>
+                    </h3>
+                    <p>
+                        <%= org.description %>
+                    </p>
+                    <p><strong>Email:</strong>
+                        <%= org.contact_email %>
+                    </p>
+                </div>
+                <% }) %>
+                    <% } else { %>
+                        <p>No organizations found.</p>
+                        <% } %>
+
     </main>
 
     <%- include('partials/footer') %>

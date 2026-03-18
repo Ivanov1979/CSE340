@@ -1,7 +1,12 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import db, { testConnection } from "./src/models/db.js";
+import db from "./src/database.js";
+import {
+    getAllOrganizations,
+    getAllProjects,
+    getAllCategories
+} from "./src/models/siteModel.js";
 
 const app = express();
 
@@ -16,24 +21,47 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "src/views"));
 
-app.get("/", async (req, res) => {
-    const title = "Home";
-    res.render("home", { title });
+app.get("/", (req, res) => {
+    res.render("home", { title: "Home" });
 });
 
 app.get("/organizations", async (req, res) => {
-    const title = "Our Partner Organizations";
-    res.render("organizations", { title });
+    try {
+        const organizations = await getAllOrganizations();
+        res.render("organizations", {
+            title: "Our Partner Organizations",
+            organizations
+        });
+    } catch (error) {
+        console.error("Organizations route error:", error.message);
+        res.status(500).send("Error loading organizations.");
+    }
 });
 
 app.get("/projects", async (req, res) => {
-    const title = "Service Projects";
-    res.render("projects", { title });
+    try {
+        const projects = await getAllProjects();
+        res.render("projects", {
+            title: "Service Projects",
+            projects
+        });
+    } catch (error) {
+        console.error("Projects route error:", error.message);
+        res.status(500).send("Error loading projects.");
+    }
 });
 
 app.get("/categories", async (req, res) => {
-    const title = "Service Project Categories";
-    res.render("categories", { title });
+    try {
+        const categories = await getAllCategories();
+        res.render("categories", {
+            title: "Service Project Categories",
+            categories
+        });
+    } catch (error) {
+        console.error("Categories route error:", error.message);
+        res.status(500).send("Error loading categories.");
+    }
 });
 
 app.get("/test-db", async (req, res) => {
@@ -46,18 +74,11 @@ app.get("/test-db", async (req, res) => {
     }
 });
 
-app.use(async (req, res) => {
-    const title = "Page Not Found";
-    res.status(404).render("404", { title });
+app.use((req, res) => {
+    res.status(404).render("404", { title: "Page Not Found" });
 });
 
-app.listen(port, async () => {
+app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
     console.log(`Environment: ${nodeEnv}`);
-
-    try {
-        await testConnection();
-    } catch (error) {
-        console.error("Startup database test failed:", error.message);
-    }
 });
