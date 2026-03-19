@@ -2,11 +2,9 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import db from "./src/database.js";
-import {
-    getAllOrganizations,
-    getAllProjects,
-    getAllCategories
-} from "./src/models/siteModel.js";
+import { getAllOrganizations } from "./src/models/organization-model.js";
+import { getAllProjects } from "./src/models/project-model.js";
+import { getAllCategories } from "./src/models/category-model.js";
 
 const app = express();
 
@@ -75,7 +73,7 @@ app.get("/test-db", async (req, res) => {
 });
 
 app.use((req, res) => {
-    res.status(404).render("404", { title: "Page Not Found" });
+    res.status(404).render("errors/404", { title: "Page Not Found" });
 });
 
 app.listen(port, () => {
