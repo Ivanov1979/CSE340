@@ -2,9 +2,10 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import db from "./src/database.js";
-import { getAllOrganizations } from "./src/models/organization-model.js";
-import { getAllProjects } from "./src/models/project-model.js";
-import { getAllCategories } from "./src/models/category-model.js";
+
+import organizationRoutes from "./src/routes/organizationRoutes.js";
+import projectRoutes from "./src/routes/projectRoutes.js";
+import categoryRoutes from "./src/routes/categoryRoutes.js";
 
 const app = express();
 
@@ -23,44 +24,9 @@ app.get("/", (req, res) => {
     res.render("home", { title: "Home" });
 });
 
-app.get("/organizations", async (req, res) => {
-    try {
-        const organizations = await getAllOrganizations();
-        res.render("organizations", {
-            title: "Our Partner Organizations",
-            organizations
-        });
-    } catch (error) {
-        console.error("Organizations route error:", error.message);
-        res.status(500).send("Error loading organizations.");
-    }
-});
-
-app.get("/projects", async (req, res) => {
-    try {
-        const projects = await getAllProjects();
-        res.render("projects", {
-            title: "Service Projects",
-            projects
-        });
-    } catch (error) {
-        console.error("Projects route error:", error.message);
-        res.status(500).send("Error loading projects.");
-    }
-});
-
-app.get("/categories", async (req, res) => {
-    try {
-        const categories = await getAllCategories();
-        res.render("categories", {
-            title: "Service Project Categories",
-            categories
-        });
-    } catch (error) {
-        console.error("Categories route error:", error.message);
-        res.status(500).send("Error loading categories.");
-    }
-});
+app.use("/", organizationRoutes);
+app.use("/", projectRoutes);
+app.use("/", categoryRoutes);
 
 app.get("/test-db", async (req, res) => {
     try {
@@ -68,12 +34,17 @@ app.get("/test-db", async (req, res) => {
         res.send(`Database works! Current time: ${result.rows[0].current_time}`);
     } catch (error) {
         console.error("Database route error:", error.message);
-        res.status(500).send("Database connection failed.");
+        res.status(500).render("errors/500", { title: "Server Error" });
     }
 });
 
 app.use((req, res) => {
     res.status(404).render("errors/404", { title: "Page Not Found" });
+});
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).render("errors/500", { title: "Server Error" });
 });
 
 app.listen(port, () => {

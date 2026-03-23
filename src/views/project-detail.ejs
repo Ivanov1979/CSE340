@@ -1,0 +1,34 @@
+<%- include("partials/header", { title }) %>
+
+    <main>
+        <h1>
+            <%= project.name %>
+        </h1>
+
+        <p>
+            Organization:
+            <a href="/organization/<%= project.organization_id %>">
+                <%= project.organization_name %>
+            </a>
+        </p>
+
+        <p>
+            <%= project.description %>
+        </p>
+
+        <h2>Categories</h2>
+
+        <div class="category-tags">
+            <% if (categories.length> 0) { %>
+                <% categories.forEach(category=> { %>
+                    <a class="tag" href="/category/<%= category.category_id %>">
+                        <%= category.name %>
+                    </a>
+                    <% }) %>
+                        <% } else { %>
+                            <p>No categories assigned.</p>
+                            <% } %>
+        </div>
+    </main>
+
+    <%- include("partials/footer") %>

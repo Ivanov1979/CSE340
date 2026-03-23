@@ -1,4 +1,4 @@
-<%- include('partials/header', { title }) %>
+<%- include("partials/header", { title }) %>
 
     <main>
         <h1>
@@ -13,20 +13,18 @@
         </p>
 
         <% if (categories && categories.length> 0) { %>
-            <% categories.forEach(cat=> { %>
-                <div>
-                    <h3>
-                        <%= cat.name %>
-                    </h3>
-                    <p>
-                        <%= cat.description %>
-                    </p>
-                </div>
-                <% }) %>
-                    <% } else { %>
-                        <p>No categories found.</p>
-                        <% } %>
-
+            <ul>
+                <% categories.forEach(cat=> { %>
+                    <li>
+                        <a href="/category/<%= cat.category_id %>">
+                            <%= cat.name %>
+                        </a>
+                    </li>
+                    <% }) %>
+            </ul>
+            <% } else { %>
+                <p>No categories found.</p>
+                <% } %>
     </main>
 
-    <%- include('partials/footer') %>
+    <%- include("partials/footer") %>
