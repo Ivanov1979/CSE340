@@ -29,7 +29,7 @@ export const buildProjectDetail = async (req, res, next) => {
         }
 
         res.render("project-detail", {
-            title: project.project_name,
+            title: project.name, // ✅ FIXED
             project
         });
     } catch (error) {
