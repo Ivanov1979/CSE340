@@ -6,10 +6,7 @@ import {
 
 const router = express.Router();
 
-// GET all categories
-router.get("/categories", buildCategories);
-
-// GET single category detail
-router.get("/category/:id", buildCategoryDetail);
+router.get("/", buildCategories);
+router.get("/:id", buildCategoryDetail);
 
 export default router;

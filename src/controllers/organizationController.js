@@ -1,10 +1,9 @@
 import {
     getAllOrganizations,
-    getOrganizationById,
-    getProjectsByOrganizationId
+    getOrganizationById
 } from "../models/organization-model.js";
 
-export async function buildOrganizations(req, res, next) {
+export const buildOrganizations = async (req, res, next) => {
     try {
         const organizations = await getAllOrganizations();
 
@@ -15,14 +14,13 @@ export async function buildOrganizations(req, res, next) {
     } catch (error) {
         next(error);
     }
-}
+};
 
-export async function buildOrganizationDetail(req, res, next) {
+export const buildOrganizationDetail = async (req, res, next) => {
     try {
-        const organizationId = req.params.id;
+        const id = req.params.id;
 
-        const organization = await getOrganizationById(organizationId);
-        const projects = await getProjectsByOrganizationId(organizationId);
+        const organization = await getOrganizationById(id);
 
         if (!organization) {
             return res.status(404).render("errors/404", {
@@ -32,10 +30,9 @@ export async function buildOrganizationDetail(req, res, next) {
 
         res.render("organization-detail", {
             title: organization.name,
-            organization,
-            projects
+            organization
         });
     } catch (error) {
         next(error);
     }
-}
+};

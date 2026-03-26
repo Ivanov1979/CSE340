@@ -1,29 +1,30 @@
-import pool from "../database.js";
+import db from "../database.js";
 
-export async function getAllCategories() {
-    const result = await pool.query(`
-        SELECT category_id, name
-        FROM categories
-        ORDER BY name
-    `);
+export const getAllCategories = async () => {
+    const result = await db.query("SELECT * FROM categories ORDER BY name");
     return result.rows;
-}
+};
 
-export async function getCategoryById(categoryId) {
-    const result = await pool.query(`
-        SELECT category_id, name
-        FROM categories
-        WHERE category_id = $1
-    `, [categoryId]);
+export const getCategoryById = async (id) => {
+    const result = await db.query(
+        "SELECT * FROM categories WHERE category_id = $1",
+        [id]
+    );
     return result.rows[0];
-}
+};
 
-export async function getProjectsByCategoryId(categoryId) {
-    const result = await pool.query(`
-        SELECT project_id, name
-        FROM projects
-        WHERE category_id = $1
-        ORDER BY name
-    `, [categoryId]);
+export const getProjectsByCategoryId = async (id) => {
+    const result = await db.query(`
+        SELECT 
+            p.project_id,
+            p.name,
+            p.description,
+            p.organization_id,
+            p.category_id
+        FROM projects p
+        WHERE p.category_id = $1
+        ORDER BY p.name
+    `, [id]);
+
     return result.rows;
-}
+};

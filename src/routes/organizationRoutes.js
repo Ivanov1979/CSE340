@@ -6,10 +6,7 @@ import {
 
 const router = express.Router();
 
-// list page
-router.get("/organizations", buildOrganizations);
-
-// detail page
-router.get("/organization/:id", buildOrganizationDetail);
+router.get("/", buildOrganizations);
+router.get("/:id", buildOrganizationDetail);
 
 export default router;

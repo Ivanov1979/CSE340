@@ -1,0 +1,28 @@
+<%- include("partials/header", { title }) %>
+
+    <h1>
+        <%= organization.name %>
+    </h1>
+
+    <h2>Organization Details</h2>
+
+    <p><strong>Description:</strong>
+        <%= organization.description %>
+    </p>
+
+    <p>
+        <strong>Email:</strong>
+        <a href="mailto:<%= organization.contact_email %>">
+            <%= organization.contact_email %>
+        </a>
+    </p>
+
+    <% if (organization.logo_filename) { %>
+        <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo">
+        <% } %>
+
+            <p>
+                <a href="/organizations">Back to Organizations</a>
+            </p>
+
+            <%- include("partials/footer") %>

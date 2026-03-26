@@ -6,7 +6,7 @@ import {
 
 const router = express.Router();
 
-router.get("/projects", buildProjects);
-router.get("/project/:id", buildProjectDetail);
+router.get("/", buildProjects);
+router.get("/:id", buildProjectDetail);
 
 export default router;

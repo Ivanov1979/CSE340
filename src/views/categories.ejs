@@ -1,30 +1,28 @@
 <%- include("partials/header", { title }) %>
 
-    <main>
-        <h1>
-            <%= title %>
-        </h1>
+    <h1>
+        <%= title %>
+    </h1>
 
-        <h2>Service Project Categories</h2>
+    <h2>Service Project Categories</h2>
 
-        <p>
-            Explore different categories of service projects. Each category represents
-            an area where volunteers can contribute and make a meaningful impact.
-        </p>
+    <p>
+        Explore different categories of service projects. Each category represents
+        an area where volunteers can contribute and make a meaningful impact.
+    </p>
 
-        <% if (categories && categories.length> 0) { %>
-            <ul>
-                <% categories.forEach(cat=> { %>
-                    <li>
-                        <a href="/category/<%= cat.category_id %>">
-                            <%= cat.name %>
-                        </a>
-                    </li>
-                    <% }) %>
-            </ul>
-            <% } else { %>
-                <p>No categories found.</p>
-                <% } %>
-    </main>
+    <% if (categories && categories.length> 0) { %>
+        <ul>
+            <% categories.forEach((cat)=> { %>
+                <li>
+                    <a href="/categories/<%= cat.category_id %>">
+                        <%= cat.name %>
+                    </a>
+                </li>
+                <% }) %>
+        </ul>
+        <% } else { %>
+            <p>No categories found.</p>
+            <% } %>
 
-    <%- include("partials/footer") %>
+                <%- include("partials/footer") %>

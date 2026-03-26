@@ -24,17 +24,16 @@ app.get("/", (req, res) => {
     res.render("home", { title: "Home" });
 });
 
-app.use("/", organizationRoutes);
-app.use("/", projectRoutes);
-app.use("/", categoryRoutes);
+app.use("/organizations", organizationRoutes);
+app.use("/projects", projectRoutes);
+app.use("/categories", categoryRoutes);
 
-app.get("/test-db", async (req, res) => {
+app.get("/test-db", async (req, res, next) => {
     try {
         const result = await db.query("SELECT NOW() as current_time");
         res.send(`Database works! Current time: ${result.rows[0].current_time}`);
     } catch (error) {
-        console.error("Database route error:", error.message);
-        res.status(500).render("errors/500", { title: "Server Error" });
+        next(error);
     }
 });
 

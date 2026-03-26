@@ -4,7 +4,7 @@ import {
     getProjectsByCategoryId
 } from "../models/category-model.js";
 
-export async function buildCategories(req, res, next) {
+export const buildCategories = async (req, res, next) => {
     try {
         const categories = await getAllCategories();
 
@@ -15,14 +15,14 @@ export async function buildCategories(req, res, next) {
     } catch (error) {
         next(error);
     }
-}
+};
 
-export async function buildCategoryDetail(req, res, next) {
+export const buildCategoryDetail = async (req, res, next) => {
     try {
-        const categoryId = req.params.id;
+        const id = req.params.id;
 
-        const category = await getCategoryById(categoryId);
-        const projects = await getProjectsByCategoryId(categoryId);
+        const category = await getCategoryById(id);
+        const projects = await getProjectsByCategoryId(id);
 
         if (!category) {
             return res.status(404).render("errors/404", {
@@ -38,4 +38,4 @@ export async function buildCategoryDetail(req, res, next) {
     } catch (error) {
         next(error);
     }
-}
+};

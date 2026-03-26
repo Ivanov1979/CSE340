@@ -1,10 +1,9 @@
 import {
     getAllProjects,
-    getProjectById,
-    getCategoriesByProjectId
+    getProjectById
 } from "../models/project-model.js";
 
-export async function buildProjects(req, res, next) {
+export const buildProjects = async (req, res, next) => {
     try {
         const projects = await getAllProjects();
 
@@ -15,14 +14,13 @@ export async function buildProjects(req, res, next) {
     } catch (error) {
         next(error);
     }
-}
+};
 
-export async function buildProjectDetail(req, res, next) {
+export const buildProjectDetail = async (req, res, next) => {
     try {
-        const projectId = req.params.id;
+        const id = req.params.id;
 
-        const project = await getProjectById(projectId);
-        const categories = await getCategoriesByProjectId(projectId);
+        const project = await getProjectById(id);
 
         if (!project) {
             return res.status(404).render("errors/404", {
@@ -31,11 +29,10 @@ export async function buildProjectDetail(req, res, next) {
         }
 
         res.render("project-detail", {
-            ttitle: project.name,
-            project,
-            categories
+            title: project.project_name,
+            project
         });
     } catch (error) {
         next(error);
     }
-}
+};
