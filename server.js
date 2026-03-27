@@ -50,3 +50,41 @@ app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
     console.log(`Environment: ${nodeEnv}`);
 });
+
+app.get("/setup-db", async (req, res) => {
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS categories (
+                category_id SERIAL PRIMARY KEY,
+                name VARCHAR(100) NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS organization (
+                organization_id SERIAL PRIMARY KEY,
+                name VARCHAR(150) NOT NULL,
+                description TEXT NOT NULL,
+                contact_email VARCHAR(255) NOT NULL,
+                logo_filename VARCHAR(255) NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS projects (
+                project_id SERIAL PRIMARY KEY,
+                name VARCHAR(150) NOT NULL,
+                description TEXT NOT NULL,
+                organization_id INT REFERENCES organization(organization_id),
+                category_id INT REFERENCES categories(category_id)
+            );
+        `);
+
+        await db.query(`
+            INSERT INTO categories (name) VALUES
+            ('Education'), ('Health'), ('Environment')
+            ON CONFLICT DO NOTHING;
+        `);
+
+        res.send("Database setup complete ✅");
+    } catch (error) {
+        console.error(error);
+        res.send("Error setting up database ❌");
+    }
+});
