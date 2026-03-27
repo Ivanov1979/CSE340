@@ -37,20 +37,6 @@ app.get("/test-db", async (req, res, next) => {
     }
 });
 
-app.use((req, res) => {
-    res.status(404).render("errors/404", { title: "Page Not Found" });
-});
-
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).render("errors/500", { title: "Server Error" });
-});
-
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-    console.log(`Environment: ${nodeEnv}`);
-});
-
 app.get("/setup-db", async (req, res) => {
     try {
         await db.query(`
@@ -77,9 +63,23 @@ app.get("/setup-db", async (req, res) => {
         `);
 
         await db.query(`
-            INSERT INTO categories (name) VALUES
-            ('Education'), ('Health'), ('Environment')
-            ON CONFLICT DO NOTHING;
+            INSERT INTO categories (name)
+            SELECT 'Education'
+            WHERE NOT EXISTS (
+                SELECT 1 FROM categories WHERE name = 'Education'
+            );
+
+            INSERT INTO categories (name)
+            SELECT 'Health'
+            WHERE NOT EXISTS (
+                SELECT 1 FROM categories WHERE name = 'Health'
+            );
+
+            INSERT INTO categories (name)
+            SELECT 'Environment'
+            WHERE NOT EXISTS (
+                SELECT 1 FROM categories WHERE name = 'Environment'
+            );
         `);
 
         res.send("Database setup complete ✅");
@@ -87,4 +87,18 @@ app.get("/setup-db", async (req, res) => {
         console.error(error);
         res.send("Error setting up database ❌");
     }
+});
+
+app.use((req, res) => {
+    res.status(404).render("errors/404", { title: "Page Not Found" });
+});
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).render("errors/500", { title: "Server Error" });
+});
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+    console.log(`Environment: ${nodeEnv}`);
 });
