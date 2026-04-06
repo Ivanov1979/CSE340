@@ -34,3 +34,27 @@ export const getProjectById = async (id) => {
 
     return result.rows[0];
 };
+
+export const createProject = async (
+    title,
+    description,
+    location,
+    date,
+    organizationId
+) => {
+    const sql = `
+        INSERT INTO projects (name, description, location, date, organization_id)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING project_id
+    `;
+
+    const result = await db.query(sql, [
+        title,
+        description,
+        location,
+        date,
+        organizationId
+    ]);
+
+    return result.rows[0].project_id;
+};

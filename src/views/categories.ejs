@@ -1,28 +1,38 @@
 <%- include("partials/header", { title }) %>
 
-    <h1>
-        <%= title %>
-    </h1>
+    <main class="container">
+        <h1>
+            <%= title %>
+        </h1>
 
-    <h2>Service Project Categories</h2>
+        <h2>Service Project Categories</h2>
 
-    <p>
-        Explore different categories of service projects. Each category represents
-        an area where volunteers can contribute and make a meaningful impact.
-    </p>
+        <p>
+            Explore different categories of service projects. Each category represents
+            an area where volunteers can contribute and make a meaningful impact.
+        </p>
 
-    <% if (categories && categories.length> 0) { %>
-        <ul>
-            <% categories.forEach((cat)=> { %>
-                <li>
-                    <a href="/categories/<%= cat.category_id %>">
-                        <%= cat.name %>
-                    </a>
-                </li>
-                <% }) %>
-        </ul>
-        <% } else { %>
-            <p>No categories found.</p>
-            <% } %>
+        <p>
+            <a href="/categories/new-category" class="btn">Add New Category</a>
+        </p>
 
-                <%- include("partials/footer") %>
+        <% if (categories && categories.length> 0) { %>
+            <ul class="card-list">
+                <% categories.forEach((cat)=> { %>
+                    <li class="card-item">
+                        <a href="/categories/<%= cat.category_id %>">
+                            <%= cat.name %>
+                        </a>
+                        |
+                        <a href="/categories/edit-category/<%= cat.category_id %>">
+                            Edit
+                        </a>
+                    </li>
+                    <% }) %>
+            </ul>
+            <% } else { %>
+                <p>No categories found.</p>
+                <% } %>
+    </main>
+
+    <%- include("partials/footer") %>
