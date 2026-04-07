@@ -1,25 +1,48 @@
 <%- include("partials/header", { title }) %>
 
-    <h1>
-        <%= project.name %>
-    </h1>
+    <main class="container">
+        <h1>
+            <%= project.name %>
+        </h1>
 
-    <p>
-        Organization:
-        <a href="/organizations/<%= project.organization_id %>">
-            <%= project.organization_name %>
-        </a>
-    </p>
+        <p>
+            Organization:
+            <a href="/organizations/<%= project.organization_id %>">
+                <%= project.organization_name %>
+            </a>
+        </p>
 
-    <p>
-        <%= project.description %>
-    </p>
+        <p>
+            <%= project.description %>
+        </p>
 
-    <p>
-        Category:
-        <a href="/categories/<%= project.category_id %>">
-            View Category
-        </a>
-    </p>
+        <p>
+            Location: <%= project.location %>
+        </p>
+
+        <p>
+            Start Date: <%= project.start_date %>
+        </p>
+
+        <h2>Categories</h2>
+
+        <% if (categories && categories.length> 0) { %>
+            <ul>
+                <% categories.forEach(category=> { %>
+                    <li>
+                        <a href="/categories/<%= category.category_id %>">
+                            <%= category.name %>
+                        </a>
+                    </li>
+                    <% }) %>
+            </ul>
+            <% } else { %>
+                <p>No categories assigned.</p>
+                <% } %>
+
+                    <p>
+                        <a href="/projects/<%= project.project_id %>/categories">Assign Categories</a>
+                    </p>
+    </main>
 
     <%- include("partials/footer") %>

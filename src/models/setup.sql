@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS project_categories;
 DROP TABLE IF EXISTS projects;
 DROP TABLE IF EXISTS organization;
 DROP TABLE IF EXISTS categories;
@@ -21,8 +22,13 @@ CREATE TABLE projects (
     description TEXT NOT NULL,
     location VARCHAR(200) NOT NULL,
     start_date DATE NOT NULL,
-    organization_id INT REFERENCES organization(organization_id),
-    category_id INT REFERENCES categories(category_id)
+    organization_id INT REFERENCES organization(organization_id)
+);
+
+CREATE TABLE project_categories (
+    project_id INT NOT NULL REFERENCES projects(project_id) ON DELETE CASCADE,
+    category_id INT NOT NULL REFERENCES categories(category_id) ON DELETE CASCADE,
+    PRIMARY KEY (project_id, category_id)
 );
 
 INSERT INTO categories (name)
@@ -53,27 +59,30 @@ INSERT INTO projects (
     description,
     location,
     start_date,
-    organization_id,
-    category_id
+    organization_id
 )
 VALUES
 ('Math Tutoring Program',
 'Provides free tutoring for students in need.',
 'Copiapó',
 '2026-03-01',
-1,
 1),
 
 ('Community Health Fair',
 'Organizes health checkups and awareness events.',
 'Caldera',
 '2026-03-05',
-2,
 2),
 
 ('Tree Planting Campaign',
 'Promotes environmental restoration.',
 'Tierra Amarilla',
 '2026-03-10',
-3,
 3);
+
+INSERT INTO project_categories (project_id, category_id)
+VALUES
+(1, 1),
+(1, 2),
+(2, 2),
+(3, 3);
