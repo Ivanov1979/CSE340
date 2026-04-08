@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS project_categories;
-DROP TABLE IF EXISTS projects;
-DROP TABLE IF EXISTS organization;
-DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS project_categories CASCADE;
+DROP TABLE IF EXISTS projects CASCADE;
+DROP TABLE IF EXISTS organization CASCADE;
+DROP TABLE IF EXISTS categories CASCADE;
 
 CREATE TABLE categories (
     category_id SERIAL PRIMARY KEY,
@@ -37,22 +37,31 @@ VALUES
 ('Health'),
 ('Environment');
 
-INSERT INTO organization (name, description, contact_email, logo_filename)
+INSERT INTO organization (
+    name,
+    description,
+    contact_email,
+    logo_filename
+)
 VALUES
-('BrightFuture Builders',
-'A nonprofit focused on improving community infrastructure through volunteer construction projects.',
-'info@brightfuturebuilders.org',
-'brightfuture-logo.png'),
-
-('GreenHarvest Growers',
-'An urban farming collective promoting food sustainability and education.',
-'contact@greenharvest.org',
-'greenharvest-logo.png'),
-
-('UnityServe Volunteers',
-'A volunteer coordination group supporting local charities and service events.',
-'hello@unityserve.org',
-'unityserve-logo.png');
+(
+    'BrightFuture Builders',
+    'A nonprofit focused on improving community infrastructure through volunteer construction projects.',
+    'info@brightfuturebuilders.org',
+    'brightfuture-logo.png'
+),
+(
+    'GreenHarvest Growers',
+    'An urban farming collective promoting food sustainability and education.',
+    'contact@greenharvest.org',
+    'greenharvest-logo.png'
+),
+(
+    'UnityServe Volunteers',
+    'A volunteer coordination group supporting local charities and service events.',
+    'hello@unityserve.org',
+    'unityserve-logo.png'
+);
 
 INSERT INTO projects (
     name,
@@ -62,25 +71,32 @@ INSERT INTO projects (
     organization_id
 )
 VALUES
-('Math Tutoring Program',
-'Provides free tutoring for students in need.',
-'Copiapó',
-'2026-03-01',
-1),
+(
+    'Math Tutoring Program',
+    'Provides free tutoring for students in need.',
+    'Copiapó',
+    '2026-03-01',
+    1
+),
+(
+    'Community Health Fair',
+    'Organizes health checkups and awareness events.',
+    'Caldera',
+    '2026-03-05',
+    2
+),
+(
+    'Tree Planting Campaign',
+    'Promotes environmental restoration.',
+    'Tierra Amarilla',
+    '2026-03-10',
+    3
+);
 
-('Community Health Fair',
-'Organizes health checkups and awareness events.',
-'Caldera',
-'2026-03-05',
-2),
-
-('Tree Planting Campaign',
-'Promotes environmental restoration.',
-'Tierra Amarilla',
-'2026-03-10',
-3);
-
-INSERT INTO project_categories (project_id, category_id)
+INSERT INTO project_categories (
+    project_id,
+    category_id
+)
 VALUES
 (1, 1),
 (1, 2),
