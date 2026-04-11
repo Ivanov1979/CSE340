@@ -18,8 +18,8 @@
                 <form action="/categories/new-category" method="POST" class="form-card">
                     <div class="form-group">
                         <label for="name">Category Name</label>
-                        <input type="text" id="name" name="name" value="<%= category?.name || '' %>" required
-                            maxlength="100">
+                        <input type="text" id="name" name="name"
+                            value="<%= category && category.name ? category.name : '' %>" required maxlength="100">
                     </div>
 
                     <button type="submit" class="btn">Create Category</button>

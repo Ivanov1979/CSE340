@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS project_categories CASCADE;
 DROP TABLE IF EXISTS projects CASCADE;
 DROP TABLE IF EXISTS organization CASCADE;
 DROP TABLE IF EXISTS categories CASCADE;
+DROP TABLE IF EXISTS account CASCADE;
 
 CREATE TABLE categories (
     category_id SERIAL PRIMARY KEY,
@@ -29,6 +30,15 @@ CREATE TABLE project_categories (
     project_id INT NOT NULL REFERENCES projects(project_id) ON DELETE CASCADE,
     category_id INT NOT NULL REFERENCES categories(category_id) ON DELETE CASCADE,
     PRIMARY KEY (project_id, category_id)
+);
+
+CREATE TABLE account (
+    account_id SERIAL PRIMARY KEY,
+    account_firstname VARCHAR(100) NOT NULL,
+    account_lastname VARCHAR(100) NOT NULL,
+    account_email VARCHAR(255) UNIQUE NOT NULL,
+    account_password TEXT NOT NULL,
+    account_type VARCHAR(20) NOT NULL DEFAULT 'Client'
 );
 
 INSERT INTO categories (name)
@@ -102,3 +112,33 @@ VALUES
 (1, 2),
 (2, 2),
 (3, 3);
+
+INSERT INTO account (
+    account_firstname,
+    account_lastname,
+    account_email,
+    account_password,
+    account_type
+)
+VALUES
+(
+    'Client',
+    'User',
+    'client@test.com',
+    '$2b$10$I4QH3pZR9p9/BRcZ092gsufceRdn1r305Q4Yn3Vy2/.V0045P9jNG',
+    'Client'
+),
+(
+    'Employee',
+    'User',
+    'employee@test.com',
+    '$2b$10$I4QH3pZR9p9/BRcZ092gsufceRdn1r305Q4Yn3Vy2/.V0045P9jNG',
+    'Employee'
+),
+(
+    'Admin',
+    'User',
+    'admin@test.com',
+    '$2b$10$I4QH3pZR9p9/BRcZ092gsufceRdn1r305Q4Yn3Vy2/.V0045P9jNG',
+    'Admin'
+);

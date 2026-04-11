@@ -25,13 +25,14 @@ export const buildCategoryDetail = async (req, res, next) => {
         const categoryId = req.params.id;
 
         const category = await getCategoryById(categoryId);
-        const projects = await getProjectsByCategoryId(categoryId);
 
         if (!category) {
             return res.status(404).render("errors/404", {
                 title: "Category Not Found"
             });
         }
+
+        const projects = await getProjectsByCategoryId(categoryId);
 
         res.render("category-detail", {
             title: category.name,
@@ -60,7 +61,25 @@ export const buildNewCategory = async (req, res, next) => {
 
 export const createCategory = async (req, res, next) => {
     try {
-        const { name } = req.body;
+        const name = req.body.name ? req.body.name.trim() : "";
+
+        const errors = [];
+
+        if (!name) {
+            errors.push({ msg: "Category name is required." });
+        }
+
+        if (name.length > 100) {
+            errors.push({ msg: "Category name must be 100 characters or fewer." });
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).render("new-category", {
+                title: "New Category",
+                errors,
+                category: { name }
+            });
+        }
 
         const newCategory = await insertCategory(name);
 
@@ -98,7 +117,36 @@ export const buildEditCategory = async (req, res, next) => {
 export const updateCategory = async (req, res, next) => {
     try {
         const categoryId = req.params.id;
-        const { name } = req.body;
+        const name = req.body.name ? req.body.name.trim() : "";
+
+        const category = await getCategoryById(categoryId);
+
+        if (!category) {
+            return res.status(404).render("errors/404", {
+                title: "Category Not Found"
+            });
+        }
+
+        const errors = [];
+
+        if (!name) {
+            errors.push({ msg: "Category name is required." });
+        }
+
+        if (name.length > 100) {
+            errors.push({ msg: "Category name must be 100 characters or fewer." });
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).render("edit-category", {
+                title: "Edit Category",
+                errors,
+                category: {
+                    category_id: categoryId,
+                    name
+                }
+            });
+        }
 
         const updatedCategory = await updateCategoryById(categoryId, name);
 
