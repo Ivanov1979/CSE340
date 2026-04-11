@@ -1,0 +1,27 @@
+<h1>Edit Project</h1>
+
+<form action="/projects/edit/<%= project.project_id %>" method="POST">
+    <label>Name:</label>
+    <input type="text" name="name" value="<%= project.name %>" required>
+
+    <label>Description:</label>
+    <textarea name="description" required><%= project.description %></textarea>
+
+    <label>Location:</label>
+    <input type="text" name="location" value="<%= project.location %>" required>
+
+    <label>Start Date:</label>
+    <input type="date" name="start_date" value="<%= project.start_date %>" required>
+
+    <label>Organization:</label>
+    <select name="organization_id" required>
+        <% organizations.forEach(org=> { %>
+            <option value="<%= org.organization_id %>" <%=org.organization_id===project.organization_id ? "selected"
+                : "" %>>
+                <%= org.name %>
+            </option>
+            <% }) %>
+    </select>
+
+    <button type="submit">Update Project</button>
+</form>

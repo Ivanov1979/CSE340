@@ -17,6 +17,7 @@ const nodeEnv = process.env.NODE_ENV || "development";
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "src/views"));
@@ -24,10 +25,6 @@ app.set("views", path.join(__dirname, "src/views"));
 app.get("/", (req, res) => {
     res.render("home", { title: "Home" });
 });
-
-app.use("/organizations", organizationRoutes);
-app.use("/projects", projectRoutes);
-app.use("/categories", categoryRoutes);
 
 app.get("/test-db", async (req, res, next) => {
     try {
@@ -38,13 +35,19 @@ app.get("/test-db", async (req, res, next) => {
     }
 });
 
+app.use("/organizations", organizationRoutes);
+app.use("/projects", projectRoutes);
+app.use("/categories", categoryRoutes);
+
 app.use((req, res) => {
-    res.status(404).render("errors/404", { title: "Page Not Found" });
+    res.status(404).render("errors/404", {
+        title: "404 Not Found"
+    });
 });
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).render("errors/500", { title: "Server Error" });
+    res.status(500).send("Server Error");
 });
 
 app.listen(port, () => {

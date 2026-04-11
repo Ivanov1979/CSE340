@@ -1,0 +1,26 @@
+<h1>Add New Project</h1>
+
+<form action="/projects/new" method="POST">
+    <label>Name:</label>
+    <input type="text" name="name" required>
+
+    <label>Description:</label>
+    <textarea name="description" required></textarea>
+
+    <label>Location:</label>
+    <input type="text" name="location" required>
+
+    <label>Start Date:</label>
+    <input type="date" name="start_date" required>
+
+    <label>Organization:</label>
+    <select name="organization_id" required>
+        <% organizations.forEach(org=> { %>
+            <option value="<%= org.organization_id %>">
+                <%= org.name %>
+            </option>
+            <% }) %>
+    </select>
+
+    <button type="submit">Save Project</button>
+</form>

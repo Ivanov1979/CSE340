@@ -38,13 +38,13 @@ export const getProjectById = async (id) => {
     return result.rows[0];
 };
 
-export const createProject = async (
-    title,
+export const insertProject = async ({
+    name,
     description,
     location,
-    startDate,
-    organizationId
-) => {
+    start_date,
+    organization_id
+}) => {
     const sql = `
         INSERT INTO projects (
             name,
@@ -54,27 +54,23 @@ export const createProject = async (
             organization_id
         )
         VALUES ($1, $2, $3, $4, $5)
-        RETURNING project_id
+        RETURNING *
     `;
 
     const result = await db.query(sql, [
-        title,
+        name,
         description,
         location,
-        startDate,
-        organizationId
+        start_date,
+        organization_id
     ]);
 
-    return result.rows[0].project_id;
+    return result.rows[0];
 };
 
 export const updateProjectById = async (
-    projectId,
-    title,
-    description,
-    location,
-    startDate,
-    organizationId
+    id,
+    { name, description, location, start_date, organization_id }
 ) => {
     const sql = `
         UPDATE projects
@@ -89,15 +85,35 @@ export const updateProjectById = async (
     `;
 
     const result = await db.query(sql, [
-        title,
+        name,
         description,
         location,
-        startDate,
-        organizationId,
-        projectId
+        start_date,
+        organization_id,
+        id
     ]);
 
     return result.rows[0];
+};
+
+export const getAllOrganizations = async () => {
+    const result = await db.query(`
+        SELECT organization_id, name
+        FROM organization
+        ORDER BY name
+    `);
+
+    return result.rows;
+};
+
+export const getAllCategories = async () => {
+    const result = await db.query(`
+        SELECT category_id, name
+        FROM categories
+        ORDER BY name
+    `);
+
+    return result.rows;
 };
 
 export const getAllCategoriesForProjectAssignment = async () => {

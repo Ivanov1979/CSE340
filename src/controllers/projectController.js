@@ -4,7 +4,11 @@ import {
     getAllCategoriesForProjectAssignment,
     getAssignedCategoryIdsByProjectId,
     replaceProjectCategories,
-    getCategoriesByProjectId
+    getCategoriesByProjectId,
+    insertProject,
+    updateProjectById,
+    getAllOrganizations,
+    getAllCategories
 } from "../models/project-model.js";
 
 export const buildProjects = async (req, res, next) => {
@@ -41,6 +45,89 @@ export const buildProjectDetail = async (req, res, next) => {
             categories,
             message: req.flash ? req.flash("success") : null
         });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const buildNewProject = async (req, res, next) => {
+    try {
+        const organizations = await getAllOrganizations();
+        const categories = await getAllCategories();
+
+        res.render("new-project", {
+            title: "Add New Project",
+            organizations,
+            categories
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const addNewProject = async (req, res, next) => {
+    try {
+        const { name, description, location, start_date, organization_id } = req.body;
+
+        const newProject = await insertProject({
+            name,
+            description,
+            location,
+            start_date,
+            organization_id
+        });
+
+        res.redirect(`/projects/${newProject.project_id}`);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const buildEditProject = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const project = await getProjectById(id);
+
+        if (!project) {
+            return res.status(404).render("errors/404", {
+                title: "Project Not Found"
+            });
+        }
+
+        const organizations = await getAllOrganizations();
+        const categories = await getAllCategories();
+
+        res.render("edit-project", {
+            title: `Edit ${project.name}`,
+            project,
+            organizations,
+            categories
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const updateProject = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const { name, description, location, start_date, organization_id } = req.body;
+
+        const updatedProject = await updateProjectById(id, {
+            name,
+            description,
+            location,
+            start_date,
+            organization_id
+        });
+
+        if (!updatedProject) {
+            return res.status(404).render("errors/404", {
+                title: "Project Not Found"
+            });
+        }
+
+        res.redirect(`/projects/${id}`);
     } catch (error) {
         next(error);
     }
