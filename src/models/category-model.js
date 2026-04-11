@@ -2,7 +2,7 @@ import db from "../database.js";
 
 export const getAllCategories = async () => {
     const sql = `
-        SELECT *
+        SELECT category_id, name
         FROM categories
         ORDER BY name
     `;
@@ -12,7 +12,7 @@ export const getAllCategories = async () => {
 
 export const getCategoryById = async (id) => {
     const sql = `
-        SELECT *
+        SELECT category_id, name
         FROM categories
         WHERE category_id = $1
     `;
@@ -26,10 +26,16 @@ export const getProjectsByCategoryId = async (id) => {
             p.project_id,
             p.name,
             p.description,
+            p.location,
+            p.start_date,
             p.organization_id,
-            p.category_id
-        FROM projects p
-        WHERE p.category_id = $1
+            o.name AS organization_name
+        FROM project_categories pc
+        JOIN projects p
+            ON pc.project_id = p.project_id
+        JOIN organization o
+            ON p.organization_id = o.organization_id
+        WHERE pc.category_id = $1
         ORDER BY p.name
     `;
     const result = await db.query(sql, [id]);
