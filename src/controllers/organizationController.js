@@ -41,7 +41,8 @@ export const buildOrganizationDetail = async (req, res, next) => {
 export const buildNewOrganization = async (req, res, next) => {
     try {
         res.render("new-organization", {
-            title: "Add New Organization"
+            title: "Add New Organization",
+            organization: {}
         });
     } catch (error) {
         next(error);
@@ -51,6 +52,14 @@ export const buildNewOrganization = async (req, res, next) => {
 export const addNewOrganization = async (req, res, next) => {
     try {
         const { name, description, contact_email, logo_filename } = req.body;
+
+        if (!name || !description || !contact_email || !logo_filename) {
+            return res.status(400).render("new-organization", {
+                title: "Add New Organization",
+                error: "All fields are required.",
+                organization: req.body
+            });
+        }
 
         await insertOrganization({
             name,
@@ -89,6 +98,20 @@ export const updateOrganization = async (req, res, next) => {
     try {
         const id = req.params.id;
         const { name, description, contact_email, logo_filename } = req.body;
+
+        if (!name || !description || !contact_email || !logo_filename) {
+            return res.status(400).render("edit-organization", {
+                title: "Edit Organization",
+                error: "All fields are required.",
+                organization: {
+                    organization_id: id,
+                    name,
+                    description,
+                    contact_email,
+                    logo_filename
+                }
+            });
+        }
 
         await updateOrganizationById(id, {
             name,

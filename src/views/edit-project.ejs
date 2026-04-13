@@ -1,6 +1,6 @@
 <h1>Edit Project</h1>
 
-<form action="/projects/edit/<%= project.project_id %>" method="POST">
+<form action="/projects/<%= project.project_id %>/edit" method="POST">
     <label>Name:</label>
     <input type="text" name="name" value="<%= project.name %>" required>
 
